@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Tributos - Hortifrúti e Negócios</title>
+    <!-- Usando Bootstrap para agilizar um layout limpo, responsivo e com botões grandes -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f8f9fa; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .card { border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+        .btn-lg { padding: 12px 20px; font-size: 1.1rem; border-radius: 8px; }
+        .form-control, .form-select { padding: 12px; border-radius: 8px; font-size: 1.05rem; }
+        .result-box { background-color: #e8f4fd; border-left: 5px solid #0d6efd; padding: 20px; border-radius: 8px; }
+    </style>
+</head>
+<body>
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="text-center mb-4">
+                    <h2 class="fw-bold text-success">Calculadora de Tributos</h2>
+                    <p class="text-muted">Simule os impostos embutidos no preço de venda do seu produto de forma rápida e simples.</p>
+                </div>
+
+                <div class="card p-4 mb-4">
+                    <form id="formTributo">
+                        <div class="mb-3">
+                            <label for="categoria" class="form-label fw-semibold">Selecione o Tipo de Produto / Serviço:</label>
+                            <select id="categoria" class="form-select" required>
+                                <option value="" disabled selected>Carregando categorias...</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="preco" class="form-label fw-semibold">Preço Final de Venda (R$):</label>
+                            <input type="number" step="0.01" id="preco" class="form-control" placeholder="Ex: 10,00" required>
+                        </div>
+
+                        <button type="submit" class="btn btn-success w-100 btn-lg shadow-sm">Calcular Impostos</button>
+                    </form>
+                </div>
+
+                <div id="resultado" class="card p-4 d-none">
+                    <h4 class="fw-bold mb-3 text-dark">Resultado da Simulação</h4>
+                    <div class="result-box mb-3">
+                        <p class="mb-1"><strong>Categoria:</strong> <span id="resCategoria"></span></p>
+                        <p class="mb-1"><strong>Preço Informado:</strong> R$ <span id="resPreco"></span></p>
+                        <p class="mb-1"><strong>Carga Tributária Total:</strong> <span id="resPercTotal"></span>% (R$ <span id="resValTotal"></span>)</p>
+                        <p class="mb-0 text-success fw-bold"><strong>Valor Líquido Estimado:</strong> R$ <span id="resLiquido"></span></p>
+                    </div>
+
+                    <h5 class="fw-semibold text-secondary fs-6">Detalhamento por Tributo:</h5>
+                    <ul class="list-group list-group-flush small">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            ICMS: <span id="detICMS"></span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            PIS: <span id="detPIS"></span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            COFINS: <span id="detCOFINS"></span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            ISS: <span id="detISS"></span>
+                        </li>
+                    </ul>
+                    <p class="text-muted mt-3" style="font-size: 0.8rem;">* Nota: Os valores apresentados têm caráter estimativo e informativo, auxiliando no planejamento inicial do negócio[cite: 11].</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Carregar categorias ao abrir a página
+        window.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const response = await fetch('/api/categorias');
+                const categorias = await response.json();
+                const select = document.getElementById('categoria');
+                select.innerHTML = '<option value="" disabled selected>Selecione uma opção...</option>';
+                for (const [id, cat] of Object.entries(categorias)) {
+                    select.innerHTML += `<option value="${id}">${cat.nome}</option>`;
+                }
+            } catch (error) {
+                alert('Erro ao carregar as categorias do sistema.');
+            }
+        });
+
+        // Enviar dados para cálculo via API
+        document.getElementById('formTributo').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const categoria_id = document.getElementById('categoria').value;
+            const preco_venda = document.getElementById('preco').value;
+
+            try {
+                const response = await fetch('/api/calcular', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ categoria_id, preco_venda })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    alert(data.erro || 'Erro ao realizar cálculo.');
+                    return;
+                }
+
+                // Preencher campos do resultado
+                document.getElementById('resCategoria').innerText = data.categoria;
+                document.getElementById('resPreco').innerText = data.preco_venda.toFixed(2);
+                document.getElementById('resPercTotal').innerText = data.percentual_total.toFixed(2);
+                document.getElementById('resValTotal').innerText = data.valor_tributos_total.toFixed(2);
+                document.getElementById('resLiquido').innerText = data.valor_liquido.toFixed(2);
+
+                document.getElementById('detICMS').innerText = `${data.detalhes.icms.aliquota}% (R$ ${data.detalhes.icms.valor.toFixed(2)})`;
+                document.getElementById('detPIS').innerText = `${data.detalhes.pis.aliquota}% (R$ ${data.detalhes.pis.valor.toFixed(2)})`;
+                document.getElementById('detCOFINS').innerText = `${data.detalhes.cofins.aliquota}% (R$ ${data.detalhes.cofins.valor.toFixed(2)})`;
+                document.getElementById('detISS').innerText = `${data.detalhes.iss.aliquota}% (R$ ${data.detalhes.iss.valor.toFixed(2)})`;
+
+                document.getElementById('resultado').classList.remove('d-none');
+            } catch (error) {
+                alert('Erro de conexão com o servidor.');
+            }
+        });
+    </script>
+</body>
+</html>
