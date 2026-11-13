@@ -2,3 +2,10 @@
 Repositório da 2ª Etapa do Projeto Integrador (TADS-SENAC) - Web API de Cálculo de Tributo<br>
 
 Projeto Integrador apresentado ao Centro Universitário SENAC - Serviço Nacional de Aprendizagem Comercial, como requisito de avaliação semestral do curso de Tecnologia em Análise e Desenvolvimento de Sistemas.
+Componentes: 
+Allan Alves Menezes
+Amanda Sartoreli Borcsik
+Angela Terumi Fushita
+Gabriel Lima Lucas Santos
+Monique Veloso de Jesus
+Raphael Alves Vieira
