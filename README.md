@@ -56,7 +56,7 @@ Grupo12-PI_TADS20262/
 ├── docs/                   # Documentação complementar do projeto
 ├── .gitignore              # Arquivos e pastas ignorados no versionamento (ex: venv/)
 └── README.md               # Documentação principal e guia de execução
-
+```
 ---
 ## 4. Instruções de Execução (Passo a Passo)
 Pré-requisitos
