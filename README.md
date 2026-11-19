@@ -1,44 +1,34 @@
-# Grupo12-PI_TADS20262
-Repositório da 2ª Etapa do Projeto Integrador (TADS-SENAC) - Web API de Cálculo de Tributo<br>
+# API de Cálculo de Tributos Embutidos no Preço Final da Mercadoria
 
-Projeto Integrador apresentado ao Centro Universitário SENAC - Serviço Nacional de Aprendizagem Comercial, como requisito de avaliação semestral do curso de Tecnologia em Análise e Desenvolvimento de Sistemas.
-
-
-# API de Cálculo de Tributos Embutidos no Preço Final da Mercadoria<br>
-
-**Projeto Integrador — Desenvolvimento de Sistemas Orientado a Dispositivos Móveis e Baseados na Web**<br>
-**Curso:** Tecnologia em Análise e Desenvolvimento de Sistemas (TADS) — Centro Universitário SENAC EAD<br>
-**Semestre/Ano:** 2026/2<br>
-**Grupo:** Grupo 12<br>
-**Componentes:**<br>
-Allan Alves Menezes<br>
-Amanda Sartoreli Borcsik<br>
-Angela Terumi Fushita<br>
-Gabriel Lima Lucas Santos<br>
-Monique Veloso de Jesus<br>
-Raphael Alves Vieira<br>
+**Projeto Integrador — Desenvolvimento de Sistemas Orientado a Dispositivos Móveis e Baseados na Web**  
+**Curso:** Tecnologia em Análise e Desenvolvimento de Sistemas (TADS) — Centro Universitário SENAC EAD  
+**Semestre/Ano:** 2026/2  
+**Grupo:** Grupo 12  
 
 ---
 
-## 1. Sobre o Projeto e Prova de Conceito (PoC)<br>
+## 1. Visão Geral e Prova de Conceito (PoC)
 
-Este projeto consiste em uma solução híbrida (Web API REST + interface simplificada responsiva) desenvolvida para auxiliar pequenos empreendedores e comerciantes — com foco inicial no setor de **hortifruti** — a compreenderem e simularem o percentual e o valor monetário dos tributos embutidos no preço final de venda de suas mercadorias e serviços (ICMS, PIS, COFINS e ISS).
+Este projeto consiste em uma solução híbrida (Web API REST + banco de dados relacional + interface web/mobile simplificada) desenvolvida para auxiliar pequenos empreendedores e comerciantes — com foco inicial no setor de **hortifrúti** — a compreenderem e simularem o percentual e o valor monetário dos tributos embutidos no preço final de venda de suas mercadorias e serviços (ICMS, PIS, COFINS e ISS).
 
-### Escopo da Prova de Conceito (PoC — 2ª Entrega)<br>
-Com base no levantamento de requisitos e personas da 1ª Entrega (**Antônio Pereira**, baixa familiaridade tecnológica; e **Marcos Oliveira**, familiaridade intermediária), esta PoC implementa a jornada principal de **simulação rápida de tributos embutidos por Categoria de produto**:<br>
-* Seleção simplificada da categoria de produto/serviço com descrição explicativa;<br>
-* Entrada do preço final de venda praticado;<br>
-* Cálculo exato (utilizando o tipo `Decimal` para evitar erros de arredondamento financeiro) e exibição clara do valor total dos tributos, do valor líquido estimado que permanece para o comércio e do detalhamento por imposto[cite: 17, 18].
-* Relatório da 1a entrega revisado pode ser consultado em /docs/PI-entrega 1-revisado.pdf
+### Justificativa e Escopo da PoC (2ª Etapa)
+A partir do levantamento de requisitos e das jornadas de usuários mapeadas na 1ª Entrega (**Antônio Pereira**, baixa familiaridade tecnológica; e **Marcos Oliveira**, familiaridade intermediária), esta Prova de Conceito valida a viabilidade técnica do núcleo do sistema:
+* **Cadastro simplificado de empresas/empreendedores** (`cadastro.html` / `cadastro.py`) persistido em banco de dados SQLite;
+* **Consulta de categorias de produtos e serviços** com descrições diretas e isentas de jargões contábeis;
+* **Simulação exata de tributos embutidos**, utilizando o tipo `Decimal` (`ROUND_HALF_UP`) no backend Python para eliminar erros de arredondamento financeiro e detalhar quanto do preço final corresponde a cada imposto e quanto permanece líquido para o comércio.
+
+📄 **Documentação de Planejamento (1ª Entrega):** [Acessar Documento de Requisitos e Personas](./docs/PI-entrega%201-revisado.pdf)
+
 ---
 
-## 2. Tecnologias Utilizadas
+## 2. Stack Tecnológica
 
-* **Backend:** Python 3.12+ e FastAPI[cite: 18]<br>
-* **Servidor ASGI:** Uvicorn<br>
-* **Precisão Monetária:** Módulo nativo `decimal` (`Decimal` e `ROUND_HALF_UP`)<br>
-* **Frontend:** HTML5, CSS3 e JavaScript (Vanilla JS com Fetch API)[cite: 18]<br>
-* **Versionamento:** Git e GitHub[cite: 9]<br>
+* **Backend:** Python 3.12+ e FastAPI
+* **Servidor ASGI:** Uvicorn
+* **Banco de Dados:** SQLite (`empresas.db`)
+* **Precisão Monetária:** Módulo nativo `decimal` (`Decimal`)
+* **Frontend:** HTML5, CSS3 e JavaScript modularizado (interface responsiva com botões ampliados para acessibilidade)
+* **Controle de Versão:** Git e GitHub
 
 ---
 
@@ -48,108 +38,115 @@ Com base no levantamento de requisitos e personas da 1ª Entrega (**Antônio Per
 Grupo12-PI_TADS20262/
 ├── backend/
 │   ├── aliquotas.py        # Tabela isolada de categorias e alíquotas tributárias
-│   ├── main.py             # Aplicação FastAPI, regras de cálculo e endpoints REST
+│   ├── cadastro.py         # Lógica e rotas de cadastro e consulta de empresas
+│   ├── main.py             # Aplicação FastAPI, regras de cálculo e integração dos endpoints
 │   └── requirements.txt    # Dependências Python do projeto
+├── database/
+│   └── empresas.db         # Banco de dados SQLite com os registros de empresas
+├── docs/
+│   └── PI-entrega 1-revisado.pdf  # Documentação de planejamento, escopo e personas (1ª Entrega)
 ├── frontend/
-│   └── index.html          # Interface web/mobile simplificada para consulta e simulação
-├── database/               # Diretório reservado para scripts e persistência de dados
-├── docs/                   # Documentação complementar do projeto
-├── .gitignore              # Arquivos e pastas ignorados no versionamento (ex: venv/)
-└── README.md               # Documentação principal e guia de execução
+│   ├── cadastro.html       # Tela de cadastro de empresas/empreendedores
+│   ├── cadastro.js         # Lógica de integração do formulário de cadastro com a API
+│   ├── index.html          # Tela principal de simulação de tributos embutidos
+│   ├── script.js           # Lógica de consumo dos endpoints de simulação e categorias
+│   └── style.css           # Folha de estilos unificada e responsiva da interface
+├── .gitignore              # Arquivos e diretórios ignorados no versionamento (venv/, __pycache__/)
+├── LICENSE                 # Licença do repositório
+└── README.md               # Guia técnico e instruções de execução do projeto
 ```
+
 ---
-## 4. Instruções de Execução (Passo a Passo)
-Pré-requisitos
-Python 3.10 ou superior instalado na máquina (com a opção Add Python to PATH habilitada);
 
-Navegador web  (Chrome, Edge, Firefox ou Safari).
+## 4. Passo a Passo para Execução Local
 
-Passo 1: Clonar o Repositório
-```
+### Pré-requisitos
+* **Python 3.10 ou superior** instalado (com a opção *Add Python to PATH* marcada);
+* Navegador web moderno (Chrome, Edge, Firefox ou Safari).
+
+### Passo 1: Clonar o Repositório
+Abra o terminal e execute:
+
+```bash
 git clone [https://github.com/aterumi/Grupo12-PI_TADS20262.git](https://github.com/aterumi/Grupo12-PI_TADS20262.git)
 cd Grupo12-PI_TADS20262
 ```
 
-Passo 2: Configurar e Iniciar o Servidor Backend (API)
-Acesse a pasta backend:
+### Passo 2: Configurar o Ambiente Virtual e Instalar Dependências
+1. Acesse o diretório do backend:
 
-```
+```bash
 cd backend
 ```
-Crie e ative o ambiente virtual (venv):
-No Windows:
 
-```
+2. Crie e ative o ambiente virtual (`venv`):
+* **Windows:**
+
+```bash
 python -m venv venv
 venv\Scripts\activate
 ```
-No Linux / macOS:
 
-```
+* **Linux / macOS:**
+
+```bash
 python3 -m venv venv
 source venv/bin/activate
 ```
-Instale as dependências necessárias:
-```
+
+3. Instale as bibliotecas listadas em `requirements.txt`:
+
+```bash
 pip install -r requirements.txt
 ```
-Inicie o servidor local da API:
-```
+
+### Passo 3: Banco de Dados (SQLite)
+* O banco de dados relacional já está estruturado e incluído no repositório em `database/empresas.db`, dispensando configuração externa de servidor de banco de dados. Ao iniciar a API, a conexão com o SQLite é realizada automaticamente.
+
+### Passo 4: Iniciar o Servidor Backend (API)
+Com o ambiente `(venv)` ativo dentro da pasta `backend/`, inicie o servidor Uvicorn:
+
+```bash
 uvicorn main:app --reload
 ```
-O servidor estará ativo em: http://127.0.0.1:8000
 
-A documentação interativa (Swagger UI) pode ser acessada em: http://127.0.0.1:8000/docs
+* **Endereço base da API:** `http://127.0.0.1:8000`
+* **Documentação interativa (Swagger UI):** `http://127.0.0.1:8000/docs`
 
-Passo 3: Executar a Interface Frontend
-Com o servidor backend rodando no terminal, navegue até a pasta frontend/ no explorador de arquivos do seu computador.
+### Passo 5: Executar o Frontend
+1. Com o servidor backend ativo no terminal, abra a pasta `frontend/` no explorador de arquivos.
+2. Abra o arquivo `index.html` no navegador para realizar a simulação de tributos ou navegue até `cadastro.html` para registrar uma nova empresa.
 
-Dê um duplo clique no arquivo index.html para abri-lo em seu navegador padrão.
+---
 
-Selecione uma categoria (ex.: Hortifruti Minimamente Processado / Embalado), informe um preço de venda (ex.: 25.00) e clique em Calcular Impostos.
+## 5. Principais Funcionalidades e Endpoints REST
 
-## 5. Documentação dos Endpoints da API
-Método  Rota              Descrição
-GET     /               Verifica o status de funcionamento da API.
-GET     /categorias     Retorna a lista de categorias de produtos/serviços cadastradas e suas descrições.
-POST    /simular        Recebe o ID da categoria e o preço final de venda, retornando o cálculo detalhado dos tributos embutidos.
+| Método | Rota | Descrição |
+| :--- | :--- | :--- |
+| `GET` | `/` | Verifica o status de disponibilidade da API. |
+| `GET` | `/categorias` | Lista as categorias de mercadorias/serviços e suas descrições. |
+| `POST` | `/simular` | Calcula os tributos embutidos (ICMS, PIS, COFINS, ISS) a partir do preço final informado. |
+| `POST` / `GET` | `/empresas` | Realiza o cadastro e a consulta de empresas no banco de dados SQLite (`cadastro.py`). |
 
-Exemplo de Requisição (POST /simular)
-Corpo enviado (JSON):
-```
-{
-  "categoria_id": "hortifruti_minimamente_processado",
-  "preco_final": 25.00
-}
-```
-Resposta retornada (JSON):
-```
-{
-  "categoria": "Hortifrúti Minimamente Processado / Embalado",
-  "preco_final_informado": 25.0,
-  "total_tributos_percentual": "16.25%",
-  "total_tributos_valor": 4.06,
-  "valor_liquido_estimado": 20.94,
-  "detalhamento_por_tributo": [
-    { "tributo": "ICMS", "percentual": "7.00%", "valor_embutido": 1.75 },
-    { "tributo": "PIS", "percentual": "1.65%", "valor_embutido": 0.41 },
-    { "tributo": "COFINS", "percentual": "7.60%", "valor_embutido": 1.90 },
-    { "tributo": "ISS", "percentual": "0.00%", "valor_embutido": 0.00 }
-  ],
-  "aviso": "Valores estimativos e informativos; não substituem orientação contábil."
-}
-```
+*(Consulte todas as rotas e esquemas JSON em tempo real acessando `http://127.0.0.1:8000/docs` com o servidor em execução).*
+
+---
 
 ## 6. Demonstração em Vídeo
-Link do vídeo de demonstração 
 
-## 7. Integrantes do Grupo 12<br>
-Allan Alves Menezes<br>
-Amanda Sartoreli Borcsik<br>
-Angela Terumi Fushita<br>
-Gabriel Lima Lucas Santos<br>
-Monique Veloso de Jesus<br>
-Raphael Alves Vieira<br>
+* **Vídeo de Apresentação e Funcionamento (máx. 1 minuto):** *(Inserir aqui o link do YouTube como "Não listado" ou o caminho para o arquivo `.mp4` no repositório)*
 
-Aviso Legal: Os valores e alíquotas apresentados nesta Prova de Conceito têm caráter estritamente acadêmico, estimativo e informativo, não substituindo a orientação de um profissional de contabilidade
+---
 
+## 7. Integrantes do Grupo 12
+
+* Allan Alves Menezes
+* Amanda Sartoreli Borcsik
+* Angela Terumi Fushita
+* Gabriel Lima Lucas Santos
+* Monique Veloso de Jesus
+* Raphael Alves Vieira
+
+---
+
+> **Aviso Legal:** Os cálculos e alíquotas apresentados nesta Prova de Conceito têm finalidade estritamente acadêmica, estimativa e informativa, não substituindo a orientação de um profissional de contabilidade.
