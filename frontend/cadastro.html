@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Empresa - Simulação Tributária</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f6f8; margin: 0; padding: 20px; display: flex; justify-content: center; }
+        .container { background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 100%; max-width: 500px; }
+        h2 { margin-bottom: 5px; color: #333; }
+        p { color: #666; font-size: 14px; margin-bottom: 20px; }
+        .form-group { margin-bottom: 15px; display: flex; flex-direction: column; }
+        label { font-weight: bold; font-size: 13px; margin-bottom: 5px; color: #444; }
+        input { padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; }
+        .row { display: flex; gap: 10px; }
+        .row .form-group { flex: 1; }
+        button { width: 100%; padding: 12px; background-color: #2b6cb0; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; font-weight: bold; margin-top: 10px; }
+        button:hover { background-color: #2c5282; }
+        .msg { margin-top: 15px; text-align: center; font-size: 14px; font-weight: bold; }
+        .error { color: #e53e3e; }
+        .success { color: #38a169; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Cadastro de empresa</h2>
+        <p>Crie sua conta para utilizar a plataforma de simulação tributária.</p>
+
+        <form id="formCadastro">
+            <div class="form-group">
+                <label>Nome da empresa *</label>
+                <input type="text" id="nome_empresa" required placeholder="Ex.: Sacolão do Antônio">
+            </div>
+
+            <div class="row">
+                <div class="form-group">
+                    <label>CNPJ</label>
+                    <input type="text" id="cnpj" placeholder="00.000.000/0000-00">
+                </div>
+                <div class="form-group">
+                    <label>Telefone / WhatsApp *</label>
+                    <input type="text" id="telefone" required placeholder="(00) 00000-0000">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>E-mail (usado como login) *</label>
+                <input type="email" id="email" required placeholder="empresa@email.com">
+            </div>
+
+            <div class="row">
+                <div class="form-group">
+                    <label>CEP *</label>
+                    <input type="text" id="cep" required placeholder="00000-000">
+                </div>
+                <div class="form-group">
+                    <label>Cidade *</label>
+                    <input type="text" id="cidade" required placeholder="Sua Cidade">
+                </div>
+                <div class="form-group" style="flex: 0.5;">
+                    <label>UF *</label>
+                    <input type="text" id="uf" required placeholder="DF">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Rua e número *</label>
+                <input type="text" id="endereco" required placeholder="Ex: Rua das Flores, 123">
+            </div>
+
+            <div class="form-group">
+                <label>Complemento</label>
+                <input type="text" id="complemento" placeholder="Sala, Bloco, Loja...">
+            </div>
+
+            <div class="form-group">
+                <label>Senha * (Mínimo de 8 caracteres)</label>
+                <input type="password" id="senha" required minlength="8" placeholder="********">
+            </div>
+
+            <button type="submit">Cadastrar empresa</button>
+            <div id="mensagem" class="msg"></div>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('formCadastro').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const msgDiv = document.getElementById('mensagem');
+            msgDiv.textContent = "Processando cadastro...";
+            msgDiv.className = "msg";
+
+            const dados = {
+                nome_empresa: document.getElementById('nome_empresa').value,
+                cnpj: document.getElementById('cnpj').value || null,
+                email: document.getElementById('email').value,
+                telefone: document.getElementById('telefone').value,
+                cep: document.getElementById('cep').value,
+                endereco: document.getElementById('endereco').value,
+                numero: "S/N",
+                complemento: document.getElementById('complemento').value || null,
+                cidade: document.getElementById('cidade').value,
+                uf: document.getElementById('uf').value.toUpperCase(),
+                senha: document.getElementById('senha').value
+            };
+
+            try {
+                const resposta = await fetch('http://127.0.0.1:8000/cadastro', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(dados)
+                });
+
+                const resultado = await resposta.json();
+
+                if (resposta.ok) {
+                    msgDiv.textContent = "Cadastro realizado com sucesso!";
+                    msgDiv.className = "msg success";
+                    setTimeout(() => {
+                        document.getElementById('formCadastro').reset();
+                    }, 2000);
+                } else {
+                    msgDiv.textContent = resultado.detail || "Erro ao realizar o cadastro.";
+                    msgDiv.className = "msg error";
+                }
+            } catch (error) {
+                console.error("Erro:", error);
+                msgDiv.textContent = "Não foi possível conectar ao servidor.";
+                msgDiv.className = "msg error";
+            }
+        });
+    </script>
+</body>
+</html>

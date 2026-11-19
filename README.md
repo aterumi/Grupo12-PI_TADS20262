@@ -29,7 +29,7 @@ Com base no levantamento de requisitos e personas da 1ª Entrega (**Antônio Per
 * Seleção simplificada da categoria de produto/serviço com descrição explicativa;<br>
 * Entrada do preço final de venda praticado;<br>
 * Cálculo exato (utilizando o tipo `Decimal` para evitar erros de arredondamento financeiro) e exibição clara do valor total dos tributos, do valor líquido estimado que permanece para o comércio e do detalhamento por imposto[cite: 17, 18].
-
+* Relatório da 1a entrega revisado pode ser consultado em /docs/PI-entrega 1-revisado.pdf
 ---
 
 ## 2. Tecnologias Utilizadas
@@ -62,32 +62,41 @@ Grupo12-PI_TADS20262/
 Pré-requisitos
 Python 3.10 ou superior instalado na máquina (com a opção Add Python to PATH habilitada);
 
-Navegador web moderno (Chrome, Edge, Firefox ou Safari).
+Navegador web  (Chrome, Edge, Firefox ou Safari).
 
 Passo 1: Clonar o Repositório
+```
 git clone [https://github.com/aterumi/Grupo12-PI_TADS20262.git](https://github.com/aterumi/Grupo12-PI_TADS20262.git)
 cd Grupo12-PI_TADS20262
+```
 
 Passo 2: Configurar e Iniciar o Servidor Backend (API)
 Acesse a pasta backend:
 
+```
 cd backend
+```
 Crie e ative o ambiente virtual (venv):
-
 No Windows:
+
+```
 python -m venv venv
 venv\Scripts\activate
-
+```
 No Linux / macOS:
+
+```
 python3 -m venv venv
 source venv/bin/activate
-
+```
 Instale as dependências necessárias:
+```
 pip install -r requirements.txt
-
+```
 Inicie o servidor local da API:
+```
 uvicorn main:app --reload
-
+```
 O servidor estará ativo em: http://127.0.0.1:8000
 
 A documentação interativa (Swagger UI) pode ser acessada em: http://127.0.0.1:8000/docs
@@ -107,12 +116,14 @@ POST    /simular        Recebe o ID da categoria e o preço final de venda, reto
 
 Exemplo de Requisição (POST /simular)
 Corpo enviado (JSON):
+```
 {
   "categoria_id": "hortifruti_minimamente_processado",
   "preco_final": 25.00
 }
-
+```
 Resposta retornada (JSON):
+```
 {
   "categoria": "Hortifrúti Minimamente Processado / Embalado",
   "preco_final_informado": 25.0,
@@ -127,17 +138,18 @@ Resposta retornada (JSON):
   ],
   "aviso": "Valores estimativos e informativos; não substituem orientação contábil."
 }
+```
 
 ## 6. Demonstração em Vídeo
 Link do vídeo de demonstração 
 
-## 7. Integrantes do Grupo 12
-Allan Alves Menezes
-Amanda Sartoreli Borcsik
-Angela Terumi Fushita
-Gabriel Lima Lucas Santos
-Monique Veloso de Jesus
-Raphael Alves Vieira
+## 7. Integrantes do Grupo 12<br>
+Allan Alves Menezes<br>
+Amanda Sartoreli Borcsik<br>
+Angela Terumi Fushita<br>
+Gabriel Lima Lucas Santos<br>
+Monique Veloso de Jesus<br>
+Raphael Alves Vieira<br>
 
 Aviso Legal: Os valores e alíquotas apresentados nesta Prova de Conceito têm caráter estritamente acadêmico, estimativo e informativo, não substituindo a orientação de um profissional de contabilidade
 

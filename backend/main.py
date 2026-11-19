@@ -10,10 +10,15 @@ try:
 except ImportError:
     from aliquotas import CATEGORIAS_TRIBUTOS
 
+try:
+    from .cadastro import router as cadastro_router
+except ImportError:
+    from .cadastro import router as cadastro_router
+
 app = FastAPI(
     title="API de Cálculo de Tributos Embutidos",
-    description="Web API para cálculo de tributos embutidos por categoria.",
-    version="1.0.0",
+    description="Web API para cálculo de tributos embutidos por categoria e cadastro de empresas.",
+    version="1.1.0",
 )
 
 app.add_middleware(
@@ -23,6 +28,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Inclui as rotas de cadastro de empresas
+app.include_router(cadastro_router)
 
 frontend_dir = os.path.abspath(
     os.path.join(os.path.dirname(__file__), "..", "frontend")
@@ -48,6 +56,18 @@ def status_api():
 
     raise HTTPException(
         status_code=404, detail=f"Arquivo index.html não encontrado em: {caminho_html}"
+    )
+
+
+@app.get("/cadastro", response_class=HTMLResponse, summary="Página de Cadastro de Empresa")
+def pagina_cadastro():
+    caminho_html = os.path.join(frontend_dir, "cadastro.html")
+    if os.path.exists(caminho_html):
+        with open(caminho_html, "r", encoding="utf-8") as f:
+            return f.read()
+
+    raise HTTPException(
+        status_code=404, detail=f"Arquivo cadastro.html não encontrado em: {caminho_html}"
     )
 
 
