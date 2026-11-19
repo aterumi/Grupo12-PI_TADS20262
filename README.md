@@ -62,7 +62,7 @@ Grupo12-PI_TADS20262/
 
 ### Pré-requisitos
 * **Python 3.10 ou superior** instalado (com a opção *Add Python to PATH* marcada);
-* Navegador web moderno (Chrome, Edge, Firefox ou Safari).
+* Navegador web  (Chrome, Edge, Firefox ou Safari).
 
 ### Passo 1: Clonar o Repositório
 Abra o terminal e execute:
