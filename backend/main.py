@@ -13,7 +13,7 @@ except ImportError:
 try:
     from .cadastro import router as cadastro_router
 except ImportError:
-    from .cadastro import router as cadastro_router
+    from cadastro import router as cadastro_router
 
 app = FastAPI(
     title="API de Cálculo de Tributos Embutidos",
