@@ -6,19 +6,37 @@ from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 
 try:
-    from .aliquotas import CATEGORIAS_TRIBUTOS
-except ImportError:
     from aliquotas import CATEGORIAS_TRIBUTOS
+except ImportError:
+    from .aliquotas import CATEGORIAS_TRIBUTOS
 
 try:
-    from .cadastro import router as cadastro_router
-except ImportError:
     from cadastro import router as cadastro_router
+except ImportError:
+    from .cadastro import router as cadastro_router
+
+try:
+    from login import router as login_router
+except ImportError:
+    from .login import router as login_router
+
+try:
+    from historico import (
+        HistoricoCreateSchema,
+        router as historico_router,
+        salvar_consulta_no_historico,
+    )
+except ImportError:
+    from .historico import (
+        HistoricoCreateSchema,
+        router as historico_router,
+        salvar_consulta_no_historico,
+    )
 
 app = FastAPI(
     title="API de Cálculo de Tributos Embutidos",
-    description="Web API para cálculo de tributos embutidos por categoria e cadastro de empresas.",
-    version="1.1.0",
+    description="Web API para cálculo de tributos embutidos por categoria, cadastro, login e histórico de empresas.",
+    version="1.3.0",
 )
 
 app.add_middleware(
@@ -29,8 +47,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Inclui as rotas de cadastro de empresas
+# Inclui as rotas de cadastro, login e histórico
 app.include_router(cadastro_router)
+app.include_router(login_router)
+app.include_router(historico_router)
 
 frontend_dir = os.path.abspath(
     os.path.join(os.path.dirname(__file__), "..", "frontend")
@@ -71,6 +91,18 @@ def pagina_cadastro():
     )
 
 
+@app.get("/login", response_class=HTMLResponse, summary="Página de Login de Empresa")
+def pagina_login():
+    caminho_html = os.path.join(frontend_dir, "login.html")
+    if os.path.exists(caminho_html):
+        with open(caminho_html, "r", encoding="utf-8") as f:
+            return f.read()
+
+    raise HTTPException(
+        status_code=404, detail=f"Arquivo login.html não encontrado em: {caminho_html}"
+    )
+
+
 @app.get("/api/categorias", summary="Listar Categorias (API)")
 @app.get("/categorias", summary="Listar Categorias")
 def listar_categorias():
@@ -103,7 +135,6 @@ async def simular_tributos(request: Request):
     except Exception:
         body = {}
 
-    # Busca os valores aceitando múltiplas variações de nomes enviados pelo front ou README
     categoria_id = (
         body.get("categoria_id")
         or body.get("categoria")
@@ -128,7 +159,6 @@ async def simular_tributos(request: Request):
             status_code=422, detail="O preço não foi informado corretamente."
         )
 
-    # Suporta ID por chave (slug) ou índice numérico se enviado por acidente
     categoria = CATEGORIAS_TRIBUTOS.get(str(categoria_id))
     if not categoria and str(categoria_id).isdigit():
         idx = int(categoria_id)
@@ -179,8 +209,32 @@ async def simular_tributos(request: Request):
 
     valor_liquido = arredondar_moeda(preco - total_impostos_valor)
 
+    # Salva no histórico da empresa se empresa_id for enviado
+    empresa_id_raw = body.get("empresa_id")
+    if empresa_id_raw is not None and str(empresa_id_raw).strip() != "":
+        try:
+            empresa_id_int = int(empresa_id_raw)
+            salvar_consulta_no_historico(
+                HistoricoCreateSchema(
+                    empresa_id=empresa_id_int,
+                    categoria_id=str(categoria_id),
+                    categoria_nome=categoria["nome"],
+                    preco_informado=float(arredondar_moeda(preco)),
+                    total_tributos_percentual=f"{total_impostos_percentual}%",
+                    total_tributos_valor=float(total_impostos_valor),
+                    valor_liquido=float(valor_liquido),
+                    resultado_json={
+                        "detalhamento_por_tributo": detalhamento,
+                        "detalhes": detalhes,
+                    },
+                )
+            )
+        except HTTPException:
+            raise
+        except Exception:
+            pass
+
     return {
-        # Formato documentado no README da entrega
         "categoria": categoria["nome"],
         "preco_final_informado": float(arredondar_moeda(preco)),
         "total_tributos_percentual": f"{total_impostos_percentual}%",
@@ -188,7 +242,6 @@ async def simular_tributos(request: Request):
         "valor_liquido_estimado": float(valor_liquido),
         "detalhamento_por_tributo": detalhamento,
         "aviso": "Valores estimativos e informativos; não substituem orientação contábil.",
-        # Campos de compatibilidade para o frontend
         "preco_venda": float(arredondar_moeda(preco)),
         "percentual_total": float(total_impostos_percentual),
         "valor_tributos_total": float(total_impostos_valor),
