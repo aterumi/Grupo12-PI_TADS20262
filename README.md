@@ -68,7 +68,7 @@ Grupo12-PI_TADS20262/
 Abra o terminal e execute:
 
 ```bash
-git clone [https://github.com/aterumi/Grupo12-PI_TADS20262.git](https://github.com/aterumi/Grupo12-PI_TADS20262.git)
+git clone https://github.com/aterumi/Grupo12-PI_TADS20262.git
 cd Grupo12-PI_TADS20262
 ```
 
