@@ -134,7 +134,7 @@ uvicorn main:app --reload
 
 ## 6. Demonstração em Vídeo
 
-* **Vídeo de Apresentação e Funcionamento (máx. 1 minuto):** *(Inserir aqui o link do YouTube como "Não listado" ou o caminho para o arquivo `.mp4` no repositório)*
+* **Vídeo de Apresentação e Funcionamento ** *https://youtu.be/uTkQc37ufqM*
 
 ---
 
