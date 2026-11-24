@@ -78,6 +78,34 @@ body {
   color: var(--text-muted);
 }
 
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.topbar-btns {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-topbar {
+  padding: 7px 14px;
+  background-color: #2b6cb0;
+  color: #ffffff;
+  text-decoration: none;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 13px;
+  transition: background-color 0.2s;
+  display: inline-block;
+  line-height: 1.2;
+}
+
+.btn-topbar:hover {
+  background-color: #2c5282;
+}
+
 /* Main Container */
 .container {
   max-width: 1200px;
