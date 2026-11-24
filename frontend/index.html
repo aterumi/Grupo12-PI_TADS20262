@@ -25,9 +25,18 @@
           <span class="team-title">Grupo 12</span>
           <span class="team-sub">PI TADS</span>
         </div>
-        <div class="topbar-btns">
+        <div id="auth-deslogado" class="topbar-btns">
           <a href="/login" class="btn-topbar">Login da Empresa</a>
           <a href="/cadastro" class="btn-topbar">Cadastrar</a>
+        </div>
+        <div id="auth-logado" style="display: none; align-items: center; gap: 10px;">
+          <div style="display: flex; align-items: center; gap: 6px; background-color: #ecfdf5; border: 1px solid #a7f3d0; padding: 5px 12px; border-radius: 4px; font-size: 13px; color: #065f46;">
+            <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background-color: #10b981;"></span>
+            <span>Empresa: <strong id="usuario-logado-nome"></strong></span>
+          </div>
+          <button type="button" id="btn-logout" style="padding: 6px 12px; background-color: #ef4444; color: white; border: none; border-radius: 4px; font-weight: bold; font-size: 12px; cursor: pointer;">
+            Sair
+          </button>
         </div>
       </div>
     </div>

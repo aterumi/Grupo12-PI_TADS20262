@@ -128,14 +128,20 @@ async function realizarCalculo(event) {
     return;
   }
 
+  const empresaId = localStorage.getItem('empresa_id');
+  const payload = {
+    categoria_id: categoriaId,
+    preco_final: precoInput
+  };
+  if (empresaId) {
+    payload.empresa_id = parseInt(empresaId, 10);
+  }
+
   try {
     const response = await fetch('/api/calcular', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        categoria_id: categoriaId,
-        preco_final: precoInput
-      })
+      body: JSON.stringify(payload)
     });
 
     const dados = await response.json();
@@ -200,8 +206,36 @@ async function realizarCalculo(event) {
   }
 }
 
+// Verifica e exibe o status de login da empresa na barra superior
+function verificarStatusLogin() {
+  const nomeEmpresa = localStorage.getItem('nome_empresa');
+  const divDeslogado = document.getElementById('auth-deslogado');
+  const divLogado = document.getElementById('auth-logado');
+  const spanNome = document.getElementById('usuario-logado-nome');
+  const btnLogout = document.getElementById('btn-logout');
+
+  if (nomeEmpresa) {
+    if (divDeslogado) divDeslogado.style.display = 'none';
+    if (divLogado) divLogado.style.display = 'flex';
+    if (spanNome) spanNome.textContent = nomeEmpresa;
+  } else {
+    if (divDeslogado) divDeslogado.style.display = 'flex';
+    if (divLogado) divLogado.style.display = 'none';
+  }
+
+  if (btnLogout) {
+    btnLogout.addEventListener('click', () => {
+      localStorage.removeItem('empresa_id');
+      localStorage.removeItem('nome_empresa');
+      localStorage.removeItem('empresa_email');
+      window.location.reload();
+    });
+  }
+}
+
 // Eventos
 document.addEventListener('DOMContentLoaded', () => {
+  verificarStatusLogin();
   carregarCategorias();
   renderizarHistorico();
 
