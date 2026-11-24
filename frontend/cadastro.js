@@ -31,12 +31,11 @@ document.getElementById('formCadastro').addEventListener('submit', async functio
         const resultado = await resposta.json();
 
         if (resposta.ok) {
-            msgDiv.textContent = "Cadastro realizado com sucesso! Redirecionando...";
+            msgDiv.textContent = "Cadastro realizado com sucesso! Redirecionando para o login...";
             msgDiv.className = "msg success";
             setTimeout(() => {
-                // Aqui você poderá redirecionar para a tela de login futuramente
-                document.getElementById('formCadastro').reset();
-            }, 2000);
+                window.location.href = '/login';
+            }, 1500);
         } else {
             msgDiv.textContent = resultado.detail || "Erro ao realizar o cadastro.";
             msgDiv.className = "msg error";

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Simulador Fiscal - Grupo 12</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-container">
+      <div class="brand">
+        <span class="brand-icon">📊</span>
+        <span class="brand-name">Simulador Fiscal</span>
+      </div>
+      <nav class="nav-links">
+        <a href="/">Dashboard</a>
+        <a href="/login" class="active">Login</a>
+        <a href="/cadastro">Cadastro</a>
+      </nav>
+      <div class="team-badge">
+        <span class="team-title">Grupo 12</span>
+        <span class="team-sub">PI TADS</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <h1 class="page-title">Login de Empresa</h1>
+
+    <div class="dashboard-grid">
+      <!-- Coluna Esquerda: Formulário de Login -->
+      <div class="column-left">
+        <section class="card">
+          <h2 class="card-title">Acesse sua Conta</h2>
+          <form id="login-form">
+            <div class="form-group">
+              <label for="email">E-mail corporativo</label>
+              <div class="input-wrapper">
+                <span class="currency-prefix">✉️</span>
+                <input type="email" id="email" name="email" placeholder="empresa@exemplo.com" required autocomplete="email">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="senha">Senha de acesso</label>
+              <div class="input-wrapper">
+                <span class="currency-prefix">🔑</span>
+                <input type="password" id="senha" name="senha" placeholder="Digite sua senha cadastrada" required autocomplete="current-password">
+              </div>
+            </div>
+
+            <button type="submit" class="btn-primary" id="btn-login">
+              Entrar na Plataforma
+            </button>
+          </form>
+
+          <div id="login-feedback" class="auth-feedback"></div>
+
+          <div class="auth-footer-links">
+            <span>Ainda não possui uma conta?</span>
+            <a href="/cadastro" class="link-destaque">Cadastre sua empresa aqui</a>
+          </div>
+        </section>
+      </div>
+
+      <!-- Coluna Direita: Informações e Vantagens -->
+      <div class="column-right">
+        <section class="card">
+          <h2 class="card-title">Vantagens do Acesso Identificado</h2>
+          <div class="benefits-list">
+            <div class="benefit-item">
+              <div class="benefit-icon">💾</div>
+              <div>
+                <strong>Histórico Persistente de Consultas</strong>
+                <p>Todas as simulações e cálculos de tributos ficam gravados automaticamente vinculados ao perfil da sua empresa.</p>
+              </div>
+            </div>
+
+            <div class="benefit-item">
+              <div class="benefit-icon">⚡</div>
+              <div>
+                <strong>Simulação Rápida e Transparência</strong>
+                <p>Cálculos tributários precisos (arredondamento bancário Decimal) detalhados por ICMS, PIS, COFINS e ISS.</p>
+              </div>
+            </div>
+
+            <div class="benefit-item">
+              <div class="benefit-icon">🛡️</div>
+              <div>
+                <strong>Segurança e Isolamento de Dados</strong>
+                <p>Senhas protegidas com criptografia Bcrypt e histórico protegido em banco de dados SQLite corporativo.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Card exibido quando já houver uma sessão salva -->
+        <section class="card" id="card-sessao-ativa" style="display: none;">
+          <div class="card-header-flex">
+            <h2 class="card-title">Sessão Atual</h2>
+            <span class="badge-status online">Conectado</span>
+          </div>
+          <p class="sessao-info">
+            Você já está autenticado como <strong id="sessao-empresa-nome"></strong> (<span id="sessao-empresa-email"></span>).
+          </p>
+          <div class="sessao-actions">
+            <a href="/" class="btn-primary" style="text-align: center; text-decoration: none;">Ir para o Dashboard</a>
+            <button type="button" id="btn-logout" class="btn-text text-danger">Desconectar</button>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-container">
+      <span>Grupo 12 - Projeto Integrador TADS</span>
+      <span>Versão 1.0.0 | FastAPI</span>
+    </div>
+  </footer>
+
+  <script src="/static/login.js"></script>
+</body>
+</html>

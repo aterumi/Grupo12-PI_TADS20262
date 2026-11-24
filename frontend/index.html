@@ -18,11 +18,13 @@
         <span class="brand-name">Simulador Fiscal</span>
       </div>
       <nav class="nav-links">
-        <a href="#" class="active">Dashboard</a>
+        <a href="/" class="active">Dashboard</a>
+        <a href="/login" id="nav-login">Login</a>
+        <a href="/cadastro">Cadastro</a>
       </nav>
       <div class="team-badge">
-        <span class="team-title">Grupo 12</span>
-        <span class="team-sub">PI TADS</span>
+        <span class="team-title" id="badge-empresa-nome">Grupo 12</span>
+        <span class="team-sub" id="badge-empresa-sub">PI TADS</span>
       </div>
     </div>
   </header>
@@ -141,11 +143,14 @@
     </div>
   </footer>
 
-  <script src="/static/script.js"></script>
-  <div style="text-align: center; margin: 20px;">
-    <a href="/cadastro" style="padding: 10px 20px; background-color: #2b6cb0; color: white; text-decoration: none; border-radius: 4px; font-weight: bold;">
-        Cadastrar Nova Empresa
+  <div style="text-align: center; margin: 2rem 0; display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+    <a href="/login" style="padding: 10px 20px; background-color: var(--primary-blue); color: white; text-decoration: none; border-radius: var(--radius-sm); font-weight: 600;">
+      Acessar Área da Empresa
     </a>
-</div>
+    <a href="/cadastro" style="padding: 10px 20px; background-color: #ffffff; color: var(--primary-blue); border: 1px solid var(--border-color); text-decoration: none; border-radius: var(--radius-sm); font-weight: 600;">
+      Cadastrar Nova Empresa
+    </a>
+  </div>
+  <script src="/static/script.js"></script>
 </body>
 </html>

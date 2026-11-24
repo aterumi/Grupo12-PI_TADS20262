@@ -128,14 +128,20 @@ async function realizarCalculo(event) {
     return;
   }
 
+  const empresaId = localStorage.getItem('empresa_id');
+  const payload = {
+    categoria_id: categoriaId,
+    preco_final: precoInput
+  };
+  if (empresaId) {
+    payload.empresa_id = parseInt(empresaId, 10);
+  }
+
   try {
     const response = await fetch('/api/calcular', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        categoria_id: categoriaId,
-        preco_final: precoInput
-      })
+      body: JSON.stringify(payload)
     });
 
     const dados = await response.json();
@@ -200,10 +206,51 @@ async function realizarCalculo(event) {
   }
 }
 
+// Atualiza cabeçalho com dados da empresa logada
+function inicializarSessaoUsuario() {
+  const nomeEmpresa = localStorage.getItem('nome_empresa');
+  const badgeNome = document.getElementById('badge-empresa-nome');
+  const badgeSub = document.getElementById('badge-empresa-sub');
+  const navLogin = document.getElementById('nav-login');
+
+  if (nomeEmpresa) {
+    if (badgeNome) badgeNome.textContent = nomeEmpresa;
+    if (badgeSub) badgeSub.textContent = 'Empresa Conectada';
+    if (navLogin) navLogin.textContent = 'Minha Conta';
+  }
+}
+
+// Carrega histórico salvo no banco SQLite para a empresa logada
+async function sincronizarHistoricoEmpresa() {
+  const empresaId = localStorage.getItem('empresa_id');
+  if (!empresaId) return;
+
+  try {
+    const res = await fetch(`/historico?empresa_id=${empresaId}`);
+    if (res.ok) {
+      const lista = await res.json();
+      if (Array.isArray(lista) && lista.length > 0) {
+        historicoSimulacoes = lista.slice(0, 5).map(item => ({
+          categoria: item.categoria_nome,
+          preco: item.preco_informado,
+          impostos: item.total_tributos_valor,
+          percentual: item.total_tributos_percentual,
+          data: item.data_consulta ? item.data_consulta.replace('T', ' ').substring(0, 16) : 'Recente'
+        }));
+        renderizarHistorico();
+      }
+    }
+  } catch (err) {
+    console.warn('Não foi possível sincronizar histórico com a API:', err);
+  }
+}
+
 // Eventos
 document.addEventListener('DOMContentLoaded', () => {
+  inicializarSessaoUsuario();
   carregarCategorias();
   renderizarHistorico();
+  sincronizarHistoricoEmpresa();
 
   document.getElementById('categoria').addEventListener('change', (e) => {
     atualizarDetalhesCategoria(e.target.value);
@@ -211,7 +258,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.getElementById('simulador-form').addEventListener('submit', realizarCalculo);
 
-  document.getElementById('btn-limpar-historico').addEventListener('click', () => {
+  document.getElementById('btn-limpar-historico').addEventListener('click', async () => {
+    const empresaId = localStorage.getItem('empresa_id');
+    if (empresaId) {
+      try {
+        await fetch(`/historico?empresa_id=${empresaId}`, { method: 'DELETE' });
+      } catch (err) {
+        console.warn('Erro ao limpar histórico no banco:', err);
+      }
+    }
     historicoSimulacoes = [];
     localStorage.removeItem('historico_tributos');
     renderizarHistorico();
