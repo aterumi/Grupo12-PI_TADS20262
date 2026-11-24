@@ -1,128 +1,98 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login - Simulador Fiscal - Grupo 12</title>
-  <link rel="stylesheet" href="/static/style.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login de Empresa - Simulação Tributária</title>
+    <style>
+        * { box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background-color: #f4f6f8; margin: 0; padding: 20px; display: flex; justify-content: center; }
+        .container { background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 100%; max-width: 450px; box-sizing: border-box; }
+        h2 { margin-bottom: 5px; color: #333; }
+        p { color: #666; font-size: 14px; margin-bottom: 20px; }
+        .form-group { margin-bottom: 15px; display: flex; flex-direction: column; }
+        label { font-weight: bold; font-size: 13px; margin-bottom: 5px; color: #444; }
+        input { width: 100%; box-sizing: border-box; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; }
+        button { width: 100%; padding: 12px; background-color: #2b6cb0; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; font-weight: bold; margin-top: 10px; }
+        button:hover { background-color: #2c5282; }
+        .msg { margin-top: 15px; text-align: center; font-size: 14px; font-weight: bold; }
+        .error { color: #e53e3e; }
+        .success { color: #38a169; }
+    </style>
 </head>
 <body>
-  <header class="topbar">
-    <div class="topbar-container">
-      <div class="brand">
-        <span class="brand-icon">📊</span>
-        <span class="brand-name">Simulador Fiscal</span>
-      </div>
-      <nav class="nav-links">
-        <a href="/">Dashboard</a>
-        <a href="/login" class="active">Login</a>
-        <a href="/cadastro">Cadastro</a>
-      </nav>
-      <div class="team-badge">
-        <span class="team-title">Grupo 12</span>
-        <span class="team-sub">PI TADS</span>
-      </div>
-    </div>
-  </header>
 
-  <main class="container">
-    <h1 class="page-title">Login de Empresa</h1>
+    <div class="container">
+        <h2>Login de empresa</h2>
+        <p>Acesse sua conta para utilizar a plataforma de simulação tributária.</p>
 
-    <div class="dashboard-grid">
-      <!-- Coluna Esquerda: Formulário de Login -->
-      <div class="column-left">
-        <section class="card">
-          <h2 class="card-title">Acesse sua Conta</h2>
-          <form id="login-form">
+        <form id="formLogin">
             <div class="form-group">
-              <label for="email">E-mail corporativo</label>
-              <div class="input-wrapper">
-                <span class="currency-prefix">✉️</span>
-                <input type="email" id="email" name="email" placeholder="empresa@exemplo.com" required autocomplete="email">
-              </div>
+                <label>E-mail *</label>
+                <input type="email" id="email" required placeholder="empresa@email.com">
             </div>
 
             <div class="form-group">
-              <label for="senha">Senha de acesso</label>
-              <div class="input-wrapper">
-                <span class="currency-prefix">🔑</span>
-                <input type="password" id="senha" name="senha" placeholder="Digite sua senha cadastrada" required autocomplete="current-password">
-              </div>
+                <label>Senha *</label>
+                <input type="password" id="senha" required placeholder="Sua senha de acesso">
             </div>
 
-            <button type="submit" class="btn-primary" id="btn-login">
-              Entrar na Plataforma
-            </button>
-          </form>
+            <button type="submit" id="btnEntrar">Acessar plataforma</button>
+            <div id="mensagem" class="msg"></div>
 
-          <div id="login-feedback" class="auth-feedback"></div>
-
-          <div class="auth-footer-links">
-            <span>Ainda não possui uma conta?</span>
-            <a href="/cadastro" class="link-destaque">Cadastre sua empresa aqui</a>
-          </div>
-        </section>
-      </div>
-
-      <!-- Coluna Direita: Informações e Vantagens -->
-      <div class="column-right">
-        <section class="card">
-          <h2 class="card-title">Vantagens do Acesso Identificado</h2>
-          <div class="benefits-list">
-            <div class="benefit-item">
-              <div class="benefit-icon">💾</div>
-              <div>
-                <strong>Histórico Persistente de Consultas</strong>
-                <p>Todas as simulações e cálculos de tributos ficam gravados automaticamente vinculados ao perfil da sua empresa.</p>
-              </div>
+            <div style="margin-top: 15px; text-align: center; font-size: 13px; color: #666;">
+                Ainda não tem conta? <a href="/cadastro" style="color: #2b6cb0; text-decoration: none; font-weight: bold;">Cadastre sua empresa aqui</a> | <a href="/" style="color: #666; text-decoration: none;">Início</a>
             </div>
-
-            <div class="benefit-item">
-              <div class="benefit-icon">⚡</div>
-              <div>
-                <strong>Simulação Rápida e Transparência</strong>
-                <p>Cálculos tributários precisos (arredondamento bancário Decimal) detalhados por ICMS, PIS, COFINS e ISS.</p>
-              </div>
-            </div>
-
-            <div class="benefit-item">
-              <div class="benefit-icon">🛡️</div>
-              <div>
-                <strong>Segurança e Isolamento de Dados</strong>
-                <p>Senhas protegidas com criptografia Bcrypt e histórico protegido em banco de dados SQLite corporativo.</p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- Card exibido quando já houver uma sessão salva -->
-        <section class="card" id="card-sessao-ativa" style="display: none;">
-          <div class="card-header-flex">
-            <h2 class="card-title">Sessão Atual</h2>
-            <span class="badge-status online">Conectado</span>
-          </div>
-          <p class="sessao-info">
-            Você já está autenticado como <strong id="sessao-empresa-nome"></strong> (<span id="sessao-empresa-email"></span>).
-          </p>
-          <div class="sessao-actions">
-            <a href="/" class="btn-primary" style="text-align: center; text-decoration: none;">Ir para o Dashboard</a>
-            <button type="button" id="btn-logout" class="btn-text text-danger">Desconectar</button>
-          </div>
-        </section>
-      </div>
+        </form>
     </div>
-  </main>
 
-  <footer class="footer">
-    <div class="footer-container">
-      <span>Grupo 12 - Projeto Integrador TADS</span>
-      <span>Versão 1.0.0 | FastAPI</span>
-    </div>
-  </footer>
+    <script>
+        document.getElementById('formLogin').addEventListener('submit', async function(e) {
+            e.preventDefault();
 
-  <script src="/static/login.js"></script>
+            const msgDiv = document.getElementById('mensagem');
+            const btn = document.getElementById('btnEntrar');
+            msgDiv.textContent = "Processando login...";
+            msgDiv.className = "msg";
+            btn.disabled = true;
+
+            const dados = {
+                email: document.getElementById('email').value,
+                senha: document.getElementById('senha').value
+            };
+
+            try {
+                const resposta = await fetch('/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(dados)
+                });
+
+                const resultado = await resposta.json();
+
+                if (resposta.ok) {
+                    msgDiv.textContent = "Login realizado com sucesso! Redirecionando...";
+                    msgDiv.className = "msg success";
+
+                    localStorage.setItem('empresa_id', resultado.empresa_id);
+                    localStorage.setItem('nome_empresa', resultado.nome_empresa);
+                    localStorage.setItem('empresa_email', resultado.email);
+
+                    setTimeout(() => {
+                        window.location.href = '/';
+                    }, 1200);
+                } else {
+                    msgDiv.textContent = resultado.detail || "E-mail ou senha inválidos.";
+                    msgDiv.className = "msg error";
+                    btn.disabled = false;
+                }
+            } catch (error) {
+                console.error("Erro:", error);
+                msgDiv.textContent = "Não foi possível conectar ao servidor.";
+                msgDiv.className = "msg error";
+                btn.disabled = false;
+            }
+        });
+    </script>
 </body>
 </html>
